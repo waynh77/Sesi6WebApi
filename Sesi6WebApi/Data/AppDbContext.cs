@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Sesi6WebApi.Entities;
 using Sesi6WebApi.Models;
 
 namespace Sesi6WebApi.Data
 {
     public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
+        public DbSet<AppUser> Users => Set<AppUser>();
         public DbSet<Employee> Employees => Set<Employee>();
         public DbSet<Department> Departments => Set<Department>();
         public DbSet<Position> Positions => Set<Position>();
@@ -12,6 +14,16 @@ namespace Sesi6WebApi.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<AppUser>(entity =>
+            {
+                entity.HasKey(x => x.Id);
+                entity.Property(x => x.FullName).HasMaxLength(100).IsRequired();
+                entity.Property(x => x.Email).HasMaxLength(150).IsRequired();
+                entity.Property(x => x.PasswordHash).IsRequired();
+                entity.Property(x => x.Role).HasMaxLength(30).IsRequired();
+                entity.HasIndex(x => x.Email).IsUnique();
+            });
 
             modelBuilder.Entity<Department>(entity =>
             {

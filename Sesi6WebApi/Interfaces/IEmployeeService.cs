@@ -6,10 +6,10 @@ namespace Sesi6WebApi.Interfaces
 {
     public interface IEmployeeService
     {
-        Task<PagedResponse<EmployeeResponse>> GetAllAsync(EmployeeQuery query);
-        Task<EmployeeResponse> GetByIdAsync(int id);
-        Task<EmployeeResponse> CreateAsync(CreateEmployeeRequest request);
-        Task UpdateAsync(int id, UpdateEmployeeRequest request);
-        Task DeleteAsync(int id);
+        Task<PagedResponse<EmployeeResponse>> GetAllAsync(EmployeeQuery query, CancellationToken cancellationToken);
+        Task<EmployeeResponse> GetByIdAsync(int id, CancellationToken cancellationToken);
+        Task<EmployeeResponse> CreateAsync(CreateEmployeeRequest request, CancellationToken cancellationToken);
+        Task UpdateAsync(int id, UpdateEmployeeRequest request, CancellationToken cancellationToken);
+        Task DeleteAsync(int id, CancellationToken cancellationToken);
     }
 }

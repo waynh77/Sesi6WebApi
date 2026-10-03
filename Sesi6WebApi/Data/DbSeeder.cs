@@ -1,11 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Sesi6WebApi.Entities;
 using Sesi6WebApi.Models;
 
 namespace Sesi6WebApi.Data
 {
     public static class DbSeeder
     {
-        public static async Task SeedAsync(AppDbContext db)
+        public static async Task SeedAsync(AppDbContext db, IPasswordHasher<AppUser> passwordHasher)
         {
             try
             {
@@ -34,6 +36,19 @@ namespace Sesi6WebApi.Data
                 await db.SaveChangesAsync();
             }
 
+            if (!await db.Users.AnyAsync(x => x.Email == "admin@employee.local"))
+            {
+                var admin = new AppUser
+                {
+                    FullName = "System Administrator",
+                    Email = "admin@employee.local",
+                    Role = "Admin",
+                    CreatedAt = DateTime.UtcNow
+                };
+                admin.PasswordHash = passwordHasher.HashPassword(admin, "Admin123!");
+                db.Users.Add(admin);
+                await db.SaveChangesAsync();
+            }
 
             if (!await db.Employees.AnyAsync())
             {
